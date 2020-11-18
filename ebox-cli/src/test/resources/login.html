@@ -1,0 +1,222 @@
+<html>
+<head>
+
+<link rel="shortcut icon" href="/favicon.ico?v=3">
+<link rel="stylesheet" href="/css/login.css?v=391" type='text/css'>
+<link rel="stylesheet" href="/css/buttons.css?v=391" type='text/css'>
+<link rel="stylesheet" href="/css/buttons_big.css" type='text/css'>
+<link rel="stylesheet" href="/css/general.css?v=391" type='text/css'>
+<link rel="icon" sizes="192x192" href="/images/apple-touch-icon.png">
+
+<script type="text/javascript" src="/js/jquery.js"></script>
+<script type="text/javascript" src="/js/jquery-ui.js"></script>
+<script type="text/javascript" src="/js/script_login.js?v=391"></script>
+
+<!-- CAPS LOCK -->
+<script type="text/javascript" src="/js/jquery.capsChecker.min.js"></script>
+<script type="text/javascript" src="/js/caps.js"></script>
+
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, width=device-width">
+
+	<script type="text/javascript">
+		var translations = {
+	       "Return to login page" : "Return to login page",
+		   "Expired form" : "Expired form"
+		}
+	</script>
+
+</head>
+
+<body onload='document.formLogin.usrname.focus();'>
+<div id='waiticon' class='hidden'><span class="waiticon"><img src='images/logo.png' style='padding-left:10px;' alt='Ebox'><br><img src='images/wait.gif' style='padding-top:10px; padding-left:10px;' alt=''></span></div>
+<div id='divHeader'>
+<div id='divLang'>
+									<a href='?lng=fr_FR' class='link_red'>Français</a>
+</div>
+</div>
+<center><div id='divSplash'></div></center>
+
+
+<center>
+
+
+
+
+
+	<script type="text/javascript" src="/js/widget/find_account_number.js?v=1"></script>
+	<link rel="stylesheet" href="/css/widget/find_account_number.css" type='text/css'>
+
+	<script type="text/javascript">
+		// ADD CSS IF NOT EXIST
+		if(!$("link[href='/css/general.css']").length) {
+			document.write("<link rel='stylesheet' href='/css/general.css' type='text/css'>");
+		}
+	</script>
+
+	<div id='findAccountNumber' class='hidden' style='display:none;'>
+
+		<div id='findAccountNumberContent' class='hidden' style='display:none;'>
+									<div class="divContentFAN" style="width:80%; max-width:800px;">
+				<div class="divContentFANTitle">
+					<span class='text_big tint_red bold'>WHERE CAN I FIND MY ACCOUNT NUMBER?</span><br><br>
+					<span class='text_regular'><img alt='' src='/images/bulletred.gif'>&nbsp;&nbsp;You can find your account number in the welcome e-mail you received</span><br>
+					<span class='text_regular'><img alt='' src='/images/bulletred.gif'>&nbsp;&nbsp;You can find your account number on your last bill</span>
+				</div>
+
+				<div style="text-align:center; margin:15px; padding-top:10px;">
+				<img src="/images/bill_en.png" style="max-width: 100%;  max-height: 100vh;" alt=''>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+
+	<div class='section group'>
+
+		<div id='divLogin' class='col divleft'>
+
+					<form method='post' id='formLogin' name='formLogin' action='/login'>
+						<table border='0' width='100%' cellspacing='0' cellpadding='0'>
+							<tr class='table_header'>
+								<td style='padding-left:10px;'>&nbsp;</td>
+							</tr>
+							<tr>
+								<td>
+
+
+									<div id='divLoginForm' class='bgrred glowing'>
+										<table border='0' width='100%' cellspacing='0' cellpadding='4'>
+											<tr>
+												<td  width='100%' colspan='2'><div style='height: 15px; overflow:hidden;'>&nbsp;</div></td>
+											</tr>
+											<tr >
+												<td width='100%' colspan='2' style='text-align:center' class='text_summary'>Log in</td>
+											</tr>
+
+																						<tr >
+												<td width='100%' colspan='2' style='text-align:center'>&nbsp;</td>
+											</tr>
+																						<tr >
+												<td width='40%' style='padding-left:20px; text-align:right' class='text_login nobr'>Account #<br><a href='javascript:void(0);' class='findAccountNumber link_red'>Show me</a></td>
+												<td width='60%' style='padding-right:20px;'><input type='text' name='usrname' id='usrname' value='' class='tbox_login'></td>
+											</tr>
+											<tr >
+												<td width='40%' style='padding-left:20px; text-align:right' class='text_login nobr'>Password</td>
+												<td width='60%' style='padding-right:20px;'><input type='password' name='pwd' id='pwd' value='' class='tbox_login' data-caps="Caps Lock is ON" autocomplete='off'> </td>
+											</tr>
+											<tr >
+												<td width='40%' style='text-align:right'> <input type="hidden" name="_csrf_security_token" value="DAxHvBZblgpGttym2oJYDI7mpT6MWArGFuS2TLaaglQ" ></td>
+												<td width='60%' style='padding-top:10px;'>
+												<div id='iLogin'><button type="button"  class='btn btn-danger' id='btnLogin'>Login</button></div>
+
+												<div class='mobile_only' style='margin-top:25px;margin-bottom:10px;'>
+													<button type="button" onclick='location.href="/register"' class='btn btn-primary ' >Create an account</button>
+												</div>
+
+												<div style='display:block; margin-top: 20px; line-height: 20px;'></div>
+												<a href='/lostpassword' class='link_red'>Forgot password?</a>
+
+
+
+												</td>
+											</tr>
+											<tr >
+												<td width='100%' colspan='2'>&nbsp;</td>
+											</tr>
+										</table>
+									</div>
+
+
+
+
+									<div id='divwait' class='bgrred hidden' style='height:80px; text-align:center;'><img src='images/wait.gif' style='padding-top:30px;' alt=''></div>
+									</td>
+
+							</tr>
+						</table>
+					</form>
+
+		</div>
+
+
+
+		<div id='divLoginRegister' class='col divright'>
+
+
+						<table border='0' width='100%' cellspacing='0' cellpadding='0'>
+							<tr class='table_header'>
+								<td style='padding-left:10px;'>&nbsp;</td>
+							</tr>
+							<tr>
+								<td>
+
+
+									<div id='divLoginRegisterForm' class='bgrred glowing'>
+										<table border='0' width='100%' cellspacing='0' cellpadding='4'>
+											<tr>
+												<td  width='100%' colspan='2'><div style='height: 15px; overflow:hidden;'>&nbsp;</div></td>
+											</tr>
+											<tr >
+												<td width='100%' colspan='2' style='text-align:center' class='text_summary'>First time in the customer zone?</td>
+											</tr>
+											<tr >
+												<td width='100%' colspan='2'><div style='height: 10px; overflow:hidden;'>&nbsp;</div></td>
+											</tr>
+											<tr >
+												<td width='20%' style='text-align:right; padding-right:5px; padding-left:25px;'><img src='/images/arrow_right.gif' alt=''></td>
+												<td width='80%' class='text_medium'>View your account balance</td>
+											</tr>
+											<tr >
+												<td width='20%' style='text-align:right; padding-right:5px; padding-left:25px;'><img src='/images/arrow_right.gif' alt=''></td>
+												<td width='80%' class='text_medium'>Activate your TV service</td>
+											</tr>
+											<tr >
+												<td width='20%' style='text-align:right; padding-right:5px; padding-left:25px;'><img src='/images/arrow_right.gif' alt=''></td>
+												<td width='80%' class='text_medium'>Make online payment</td>
+											</tr>
+											<tr >
+												<td width='20%' style='text-align:right; padding-right:5px; padding-left:25px;'><img src='/images/arrow_right.gif' alt=''></td>
+												<td width='80%' class='text_medium'>Check your usage</td>
+											</tr>
+											<tr >
+												<td width='20%' style='text-align:right; padding-right:5px; padding-left:25px;'><img src='/images/arrow_right.gif' alt=''></td>
+												<td width='80%' class='text_medium'>Call forwarding</td>
+											</tr>
+											<tr >
+												<td width='20%' style='text-align:right; padding-right:5px; padding-left:25px;'><img src='/images/arrow_right.gif' alt=''></td>
+												<td width='80%' class='text_medium'>And much more</td>
+											</tr>
+											<tr >
+												<td width='100%' colspan='2'><div style='height: 10px; overflow:hidden;'>&nbsp;</div></td>
+											</tr>
+											<tr >
+												<td width='100%' colspan='2' style='padding-top:10px; text-align:center;'>
+													<button type="button" onclick='location.href="/register"' class='btn btn-primary ' >Create an account</button>
+
+												</td>
+											</tr>
+											<tr >
+												<td width='100%' colspan='2'>&nbsp;</td>
+											</tr>
+										</table>
+									</div>
+
+									</td>
+
+							</tr>
+						</table>
+
+
+		</div>
+
+
+
+
+
+	</div>
+
+<br><br>
+</center>
+</body>
+</html>
