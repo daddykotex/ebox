@@ -3,12 +3,13 @@ import cats.implicits._
 
 import com.monovore.decline._
 import com.monovore.decline.effect._
+import org.http4s.client.blaze.BlazeClientBuilder
 
 //Opts
-final case class Credentials(accountNumber: String, password: String)
+final case class EboxCredentials(accountNumber: String, password: String)
 
 // Commands
-final case class GetUsage(credentials: Credentials)
+final case class GetUsage(credentials: EboxCredentials)
 
 object Main
     extends CommandIOApp(
@@ -19,7 +20,7 @@ object Main
 
   val accountNameOpts: Opts[String] = Opts.argument[String](metavar = "account-number")
   val passwordOpts: Opts[String] = Opts.argument[String](metavar = "password")
-  val credentialsOpts: Opts[Credentials] = (accountNameOpts, passwordOpts).mapN(Credentials)
+  val credentialsOpts: Opts[EboxCredentials] = (accountNameOpts, passwordOpts).mapN(EboxCredentials)
 
   // Commands
   val getUsageCmd: Opts[GetUsage] =
@@ -28,7 +29,12 @@ object Main
     }
 
   override def main: Opts[IO[ExitCode]] =
-    getUsageCmd.map { case GetUsage(all) =>
-      IO.delay(println("50")).as(ExitCode.Success)
+    getUsageCmd.map { case GetUsage(credentials) =>
+      Blocker[IO]
+        .flatMap(blocker => BlazeClientBuilder[IO](blocker.blockingContext).resource)
+        .use(client => new Web(client).getUsage(credentials))
+        .flatMap { result => IO.delay(println(result)) }
+        .as(ExitCode.Success)
+
     }
 }
