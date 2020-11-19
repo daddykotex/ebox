@@ -21,7 +21,7 @@ lazy val eboxCli = (project in file("ebox-cli"))
     addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1"),
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-core" % "2.2.0",
-      "org.http4s" %% "http4s-blaze-client" % "0.21.8",
+      "org.http4s" %% "http4s-async-http-client" % "0.21.8",
       "com.monovore" %% "decline" % declineVersion,
       "com.monovore" %% "decline-effect" % declineVersion,
       "org.scalameta" %% "munit" % "0.7.17" % Test,

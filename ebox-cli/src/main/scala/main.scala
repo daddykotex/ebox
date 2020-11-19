@@ -3,7 +3,7 @@ import cats.implicits._
 
 import com.monovore.decline._
 import com.monovore.decline.effect._
-import org.http4s.client.blaze.BlazeClientBuilder
+import org.http4s.client.asynchttpclient.AsyncHttpClient
 
 //Opts
 final case class EboxCredentials(accountNumber: String, password: String)
@@ -31,7 +31,9 @@ object Main
   override def main: Opts[IO[ExitCode]] =
     getUsageCmd.map { case GetUsage(credentials) =>
       Blocker[IO]
-        .flatMap(blocker => BlazeClientBuilder[IO](blocker.blockingContext).resource)
+        // if wondering why Blaze is not used here
+        //https://github.com/http4s/http4s/issues/2913
+        .flatMap(blocker => AsyncHttpClient.resource[IO]())
         .use(client => new Web(client).getUsage(credentials))
         .flatMap { result => IO.delay(println(result)) }
         .as(ExitCode.Success)
