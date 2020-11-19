@@ -12,6 +12,18 @@ lazy val root = (project in file("."))
 
 lazy val declineVersion = "1.3.0"
 
+lazy val debugOptionsNativeImage = Seq(
+  "-H:+ReportExceptionStackTraces",
+  "-H:+ReportUnsupportedElementsAtRuntime",
+  "-H:+TraceClassInitialization",
+  "-H:+PrintClassInitialization",
+  "-H:+StackTrace",
+  "-H:+JNI",
+  "-H:-SpawnIsolates",
+  "-H:-UseServiceLoaderFeature",
+  "-H:+RemoveSaturatedTypeFlows"
+)
+
 addCommandAlias("buildCli", "eboxCli/nativeImage")
 lazy val eboxCli = (project in file("ebox-cli"))
   .enablePlugins(NativeImagePlugin)
@@ -28,5 +40,22 @@ lazy val eboxCli = (project in file("ebox-cli"))
       "org.typelevel" %% "munit-cats-effect-2" % "0.7.0" % Test,
       "org.http4s" %% "http4s-dsl" % "0.21.8" % Test
     ),
-    testFrameworks += new TestFramework("munit.Framework")
+    javaOptions in run := {
+      val path = baseDirectory.value / "src" / "main" / "resources" / "META-INF" / "native-image"
+      Seq(s"-agentlib:native-image-agent=config-output-dir=$path")
+    },
+    fork in run := true,
+    testFrameworks += new TestFramework("munit.Framework"),
+    nativeImageOptions ++= List(
+      "--verbose",
+      "--no-server",
+      "--no-fallback",
+      "--enable-http",
+      "--enable-https",
+      "--enable-all-security-services",
+      "--report-unsupported-elements-at-runtime",
+      "--allow-incomplete-classpath",
+      "--initialize-at-build-time=scala,org.slf4j.LoggerFactory",
+      "--initialize-at-run-time=io.netty.handler.ssl.ConscryptAlpnSslEngine,org.asynchttpclient"
+    )
   )
