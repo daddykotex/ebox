@@ -8,21 +8,7 @@ lazy val root = (project in file("."))
     ),
     name := "ebox"
   )
-  .aggregate(eboxCli, blazeRepro)
-
-lazy val blazeRepro = (project in file("blaze-repro"))
-  .enablePlugins(NativeImagePlugin)
-  .settings(
-    name := "blaze-repro",
-    Compile / mainClass := Some("blaze.Main"),
-    addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1"),
-    libraryDependencies ++= Seq(
-      "org.typelevel" %% "cats-core" % "2.2.0",
-      "org.http4s" %% "http4s-blaze-client" % "0.21.8",
-      "ch.qos.logback" % "logback-classic" % "1.2.3"
-    ),
-    fork in run := true
-  )
+  .aggregate(eboxCli)
 
 lazy val declineVersion = "1.3.0"
 
