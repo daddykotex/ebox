@@ -1,0 +1,7 @@
+{
+  "resources":[
+    {"pattern":"\\Qorg/asynchttpclient/config/ahc-default.properties\\E"}, 
+    {"pattern":"\\Qorg/asynchttpclient/config/ahc-version.properties\\E"}
+  ],
+  "bundles":[]
+}
