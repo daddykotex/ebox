@@ -20,7 +20,12 @@ class FindCSRFSpec extends CatsEffectSuite {
 
   test("find the CSRF token in a html payload") {
     readHtml.map { html =>
-      assertEquals(FindCSRF(html), Some("DAxHvBZblgpGttym2oJYDI7mpT6MWArGFuS2TLaaglQ"))
+      assertEquals(
+        FindCSRF("__RequestVerificationToken")(html),
+        Some(
+          "Avrc_VikojUb-89p1lYzQTZ6Fdl98NTGBFs0WBhXGtMrfhSUmeFXdFSf4eecDwEeh2LzSCpycfmzjAowxRy48WaI96Cn-z4GZJqm-KJ5Ank1"
+        )
+      )
     }
   }
 
@@ -33,6 +38,15 @@ class FindCSRFSpec extends CatsEffectSuite {
   }
 
   test("find the CSRF token in a html payload stream") {
-    FindCSRF.inStream(htmlStream).map(it => assertEquals(it, Some("DAxHvBZblgpGttym2oJYDI7mpT6MWArGFuS2TLaaglQ")))
+    FindCSRF
+      .inStream("__RequestVerificationToken")(htmlStream)
+      .map(it =>
+        assertEquals(
+          it,
+          Some(
+            "Avrc_VikojUb-89p1lYzQTZ6Fdl98NTGBFs0WBhXGtMrfhSUmeFXdFSf4eecDwEeh2LzSCpycfmzjAowxRy48WaI96Cn-z4GZJqm-KJ5Ank1"
+          )
+        )
+      )
   }
 }

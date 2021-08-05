@@ -13,63 +13,81 @@ import org.http4s.implicits._
 import cats.effect.ContextShift
 
 class Web(client: Client[IO])(implicit cs: ContextShift[IO]) {
+  private case class CoopAuth(cookieVerif: String, formVerif: String)
   private type RequestTransformer = Request[IO] => Request[IO]
 
-  private val baseUri = uri"https://client.ebox.ca"
+  private val baseUri = uri"https://www.portailcoopsjb.com"
 
   private def bodyIfSuccess(response: Response[IO]): IO[fs2.Stream[IO, String]] = {
     if (response.status.code <= 300) IO.pure(response.bodyText)
     else IO.raiseError(new RuntimeException(s"Got ${response.status} when trying to read body."))
   }
 
+  private val csrfCookieName = "__RequestVerificationToken"
+  private val sessionCookieName = ".AspNet.ApplicationCookie"
+
   private def login(credentials: CoopCredentials): IO[RequestTransformer] = {
     def loginRequest(csrf: String) = POST(
       UrlForm(
-        "usrname" -> credentials.accountNumber,
-        "pwd" -> credentials.password,
-        "_csrf_security_token" -> csrf
+        "UserNameLogin" -> credentials.email,
+        "PasswordLogin" -> credentials.password,
+        csrfCookieName -> csrf,
+        "vCodeLog" -> "",
+        "btnLoginUserProfil" -> "Se connecter"
       ),
-      baseUri / "login"
+      baseUri / "Compte" / "Connexion"
     )
-    def doLogin(request: Request[IO]): IO[Unit] = {
+
+    def doLogin(request: Request[IO]): IO[String] = {
       client
         .run(request)
         .use { resp =>
-          val goodStatus = resp.status.code =!= 302
+          val badStatus = resp.status.code =!= 302
           val location = resp.headers.find(_.name === headers.Location.name).map(_.value)
-          val errorLocation = location.exists(_.contains("/?err"))
-          IO.raiseWhen(goodStatus || errorLocation)(
-            new RuntimeException(s"Got ${resp.status} when login (redirected to ${location.getOrElse("N/A")}).")
-          )
+          val goodLocation = location.exists(_.contains("Contenu/Page/Factures-electriques"))
+          val checkResp = IO
+            .raiseWhen(badStatus || !goodLocation)(
+              new RuntimeException(s"Got ${resp.status} when login. Redirected to ${location.getOrElse("N/A")}")
+            )
+          val logStatus = IO.delay(println(resp.headers))
+          checkResp *> logStatus *> extractCookieValueFromName(sessionCookieName, resp)
         }
     }
 
-    val csrfRequest = GET(baseUri)
-    val getCSRFAndSession: IO[(String, String)] =
+    def extractCookieValueFromName(name: String, resp: Response[IO]): IO[String] = {
+      resp.cookies
+        .find(_.name === name)
+        .liftTo[IO](new RuntimeException(s"Could not find $name in cookies."))
+        .map(_.content)
+    }
+
+    val csrfRequest = GET(baseUri / "Compte" / "ConnexionInscription")
+
+    val getCSRFs: IO[CoopAuth] =
       csrfRequest.map(client.run).flatMap { resource =>
         resource.use { resp =>
-          val session: IO[String] =
-            resp.cookies
-              .find(_.name === "PHPSESSID")
-              .liftTo[IO](new RuntimeException("Could not find PHPSESSID in cookies."))
-              .map(_.content)
-          val csrf: IO[String] = bodyIfSuccess(resp)
-            .flatMap(FindCSRF.inStream[IO])
+          val cookieToken: IO[String] = extractCookieValueFromName(csrfCookieName, resp)
+          val cookieForm: IO[String] = bodyIfSuccess(resp)
+            .flatMap(FindCSRF.inStream[IO](csrfCookieName))
             .flatMap(_.liftTo[IO](new RuntimeException("Could not find CSRF in HTML.")))
-          (csrf, session).parTupled
+          (cookieToken, cookieForm).parTupled
+            .map(CoopAuth.tupled)
         }
       }
 
     for {
-      (csrf, session) <- getCSRFAndSession
+      auth <- getCSRFs
+      _ = println(auth)
+      csrfTransformer = { req: Request[IO] => req.addCookie(csrfCookieName, auth.cookieVerif) }
 
-      reqTransformer = { req: Request[IO] => req.addCookie("PHPSESSID", session) }
-
-      _ <- loginRequest(csrf).map(reqTransformer).flatMap(doLogin)
-    } yield reqTransformer
+      session <- loginRequest(auth.formVerif).map(csrfTransformer).flatMap(doLogin)
+    } yield {
+      val sessionTransformer = { req: Request[IO] => req.addCookie(sessionCookieName, session) }
+      csrfTransformer.andThen(sessionTransformer)
+    }
   }
 
   def downloadLatest(credentials: CoopCredentials): fs2.Stream[IO, Byte] = {
-    fs2.Stream.empty
+    fs2.Stream.eval(login(credentials)).flatMap { _ => fs2.Stream.emits("yes".getBytes()) }
   }
 }

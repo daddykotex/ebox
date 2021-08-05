@@ -1,222 +1,288 @@
-<html>
-<head>
+<!DOCTYPE html>
+<!--[if lte IE 8]><html class="no-js ie8" lang="fr-CA"><![endif]-->
+<!--[if (gt IE 8)|!(IE)]><!--><html class="no-js" lang="fr-CA"><!--<![endif]-->
+  <head>
+    <meta charset="utf-8" />
+    <title>Connexion</title>
 
-<link rel="shortcut icon" href="/favicon.ico?v=3">
-<link rel="stylesheet" href="/css/login.css?v=391" type='text/css'>
-<link rel="stylesheet" href="/css/buttons.css?v=391" type='text/css'>
-<link rel="stylesheet" href="/css/buttons_big.css" type='text/css'>
-<link rel="stylesheet" href="/css/general.css?v=391" type='text/css'>
-<link rel="icon" sizes="192x192" href="/images/apple-touch-icon.png">
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1,  user-scalable=no"
+    />
+    <link
+      rel="stylesheet"
+      href="/Content/masterCss?v=K8T_gbz7rtqeC2zt_pqB_U5w7VwtD9UZaJpQ6kTafv81"
+      media="screen"
+    />
+  </head>
 
-<script type="text/javascript" src="/js/jquery.js"></script>
-<script type="text/javascript" src="/js/jquery-ui.js"></script>
-<script type="text/javascript" src="/js/script_login.js?v=391"></script>
+  <body>
+    <div id="outer-wrap">
+      <div id="inner-wrap">
+        <div class="header" id="top">
+          <div class="inner-container clearfix">
+            <a class="logo" href="/">
+              <img
+                src="/Content/medias/communs/header_logo.png"
+                srcset="/Content/medias/communs/header_logo_x3.png 1.5x"
+                alt="Coop&#233;rative r&#233;gionale d’&#233;lectricit&#233; de St-Jean-Baptiste-de-Rouville"
+              />
+              <strong><span>Portail</span> pour les membres</strong>
+            </a>
 
-<!-- CAPS LOCK -->
-<script type="text/javascript" src="/js/jquery.capsChecker.min.js"></script>
-<script type="text/javascript" src="/js/caps.js"></script>
+            <a href="#menu" id="nav-open-btn">Menu</a>
+          </div>
+        </div>
 
-<meta name="viewport" content="initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0, width=device-width">
+        <div class="header-mobile" id="menu">
+          <a href="#top" id="nav-close-btn" class="ir">Fermer</a>
+        </div>
 
-	<script type="text/javascript">
-		var translations = {
-	       "Return to login page" : "Return to login page",
-		   "Expired form" : "Expired form"
-		}
-	</script>
+        <div class="main">
+          <div class="inner-container clearfix">
+            <div class="content full-width login clearfix">
+              <div class="txtContenu clearfix">
+                <p class="bigger">
+                  <strong
+                    >Simple, &eacute;conomique... Privil&eacute;giez le paiement
+                    &eacute;lectronique.&nbsp;
+                  </strong>
+                </p>
+                <p class="highlight">
+                  <strong
+                    >Pr&eacute;voyez 2 &agrave; 3 jours pour la r&eacute;ception
+                    de votre paiement &agrave; nos bureaux.<br
+                  /></strong>
+                </p>
+              </div>
 
-</head>
+              <div id="login-form" class="login-connect">
+                <form action="/Compte/Connexion" id="loginForm" method="post">
+                  <h1>Connexion</h1>
+                  <div class="login-mobile-shortcut txtContenu">
+                    <p class="bloc smaller">
+                      <strong>Nouvelle inscription?</strong><br />
+                      <a href="#register-form">Cliquez ici</a> pour accéder au
+                      formulaire.
+                    </p>
+                  </div>
+                  <h2 class="sansespace">Déjà inscrit?</h2>
+                  Utilisez cette section pour ouvrir une&nbsp;session&nbsp;:
+                  <input
+                    name="__RequestVerificationToken"
+                    type="hidden"
+                    value="Avrc_VikojUb-89p1lYzQTZ6Fdl98NTGBFs0WBhXGtMrfhSUmeFXdFSf4eecDwEeh2LzSCpycfmzjAowxRy48WaI96Cn-z4GZJqm-KJ5Ank1"
+                  />
+                  <div class="form-ctnr clearfix">
+                    <div class="txtfield">
+                      <label for="UserNameLogin"
+                        >Identifiant (Adresse courriel)</label
+                      >
+                      <input
+                        data-val="true"
+                        data-val-email="Vous devez entrer une adresse courriel valide"
+                        data-val-required="Le champ «Identifiant» est obligatoire"
+                        id="UserNameLogin"
+                        name="UserNameLogin"
+                        type="email"
+                        value=""
+                      />
+                    </div>
 
-<body onload='document.formLogin.usrname.focus();'>
-<div id='waiticon' class='hidden'><span class="waiticon"><img src='images/logo.png' style='padding-left:10px;' alt='Ebox'><br><img src='images/wait.gif' style='padding-top:10px; padding-left:10px;' alt=''></span></div>
-<div id='divHeader'>
-<div id='divLang'>
-									<a href='?lng=fr_FR' class='link_red'>Français</a>
-</div>
-</div>
-<center><div id='divSplash'></div></center>
+                    <div class="txtfield">
+                      <label for="PasswordLogin">Mot de passe</label>
+                      <input
+                        data-val="true"
+                        data-val-length="Le «Mot de passe» doit avoir un minimum de 8 caractères"
+                        data-val-length-max="30"
+                        data-val-length-min="8"
+                        data-val-required="Le champ «Mot de passe» est obligatoire"
+                        id="PasswordLogin"
+                        name="PasswordLogin"
+                        type="password"
+                      />
+                    </div>
 
+                    <div class="ValidForm">
+                      <label for="vCodeLog">vCodeLog</label
+                      ><input
+                        id="vCodeLog"
+                        name="vCodeLog"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                  <div class="txtContenu">
+                    <p class="bloc smaller">
+                      <strong>Oublié votre mot&nbsp;de&nbsp;passe&nbsp;?</strong
+                      ><br />
+                      <a href="/MotPassePerdu/MotPassePerdu">Cliquez ici</a>
+                      pour en obtenir un&nbsp;autre.
+                    </p>
+                  </div>
+                  <input
+                    type="submit"
+                    value="Se connecter"
+                    id="btnLoginUserProfil"
+                    name="btnLoginUserProfil"
+                    class="form-btn"
+                  />
+                </form>
+              </div>
 
-<center>
+              <div id="register-form" class="login-register">
+                <form
+                  action="/Compte/Inscription"
+                  id="registerForm"
+                  method="post"
+                >
+                  <h1>Inscription</h1>
+                  <h2 class="sansespace">Nouvelle inscription?</h2>
+                  Veuillez fournir les informations&nbsp;suivantes&nbsp;:
+                  <input
+                    name="__RequestVerificationToken"
+                    type="hidden"
+                    value="VN6CE0VSgP71tLjZ4hRb-eodt_6y3OPKtEN6K9Ta4BHap_fK0uMhUrev1N_TuiqZldI0EHCQeT-kLxCG2BkswJgKLzevOoA3A92OI4Cnsvo1"
+                  />
+                  <div class="form-ctnr clearfix">
+                    <div class="txtfield">
+                      <label for="Nom">Nom</label>
+                      <input
+                        class="text-box single-line"
+                        data-val="true"
+                        data-val-length="Le contenu du champ «Nom» ne doit pas dépasser 255 caractères"
+                        data-val-length-max="255"
+                        data-val-length-min="1"
+                        data-val-required="Le champ «Nom» est obligatoire"
+                        id="Nom"
+                        name="Nom"
+                        type="text"
+                        value=""
+                      />
+                    </div>
 
+                    <div class="txtfield">
+                      <label for="Prenom">Pr&#233;nom</label>
+                      <input
+                        class="text-box single-line"
+                        data-val="true"
+                        data-val-length="Le contenu du champ «Prénom» ne doit pas dépasser 255 caractères"
+                        data-val-length-max="255"
+                        data-val-length-min="1"
+                        data-val-required="Le champ «Prénom» est obligatoire"
+                        id="Prenom"
+                        name="Prenom"
+                        type="text"
+                        value=""
+                      />
+                    </div>
 
+                    <div class="txtfield">
+                      <label for="NoCompteCoop">Num&#233;ro de compte</label>
+                      <strong class="info">?</strong>
+                      <input
+                        data-val="true"
+                        data-val-length="Le contenu du champ «Numéro de compte» doit contenir 6 ou 7 chiffres"
+                        data-val-length-max="7"
+                        data-val-length-min="6"
+                        data-val-number="Le champs «Numéro de compte» doit être numérique"
+                        data-val-required="Le champ «Numéro de compte» est obligatoire"
+                        id="NoCompteCoop"
+                        name="NoCompteCoop"
+                        type="text"
+                        value=""
+                      />
+                    </div>
 
+                    <div class="txtfield">
+                      <label for="UserName">Adresse courriel</label>
+                      <input
+                        data-val="true"
+                        data-val-email="Vous devez entrer une adresse courriel valide"
+                        data-val-required="Le champ «Adresse courriel» est obligatoire"
+                        id="UserName"
+                        name="UserName"
+                        type="email"
+                        value=""
+                      />
+                    </div>
 
+                    <div class="txtfield">
+                      <label for="Password">Mot de passe</label>
+                      <strong class="info">?</strong>
+                      <input
+                        data-val="true"
+                        data-val-length="Le Mot de passe doit avoir un minimum de 8 caractères."
+                        data-val-length-max="30"
+                        data-val-length-min="8"
+                        data-val-required="Le champ «Mot de passe» est obligatoire"
+                        id="Password"
+                        name="Password"
+                        type="password"
+                      />
+                    </div>
 
-	<script type="text/javascript" src="/js/widget/find_account_number.js?v=1"></script>
-	<link rel="stylesheet" href="/css/widget/find_account_number.css" type='text/css'>
+                    <div class="txtfield">
+                      <label for="ConfirmPassword"
+                        >Validation du mot de passe</label
+                      >
+                      <input
+                        data-val="true"
+                        data-val-equalto="Le mot de passe et la validation du mot de passe doivent être identique"
+                        data-val-equalto-other="*.Password"
+                        data-val-length="Le Validation du mot de passe doit avoir un minimum de 8 caractères."
+                        data-val-length-max="30"
+                        data-val-length-min="8"
+                        data-val-required="Le champ «Validation du mot de passe» est obligatoire"
+                        id="ConfirmPassword"
+                        name="ConfirmPassword"
+                        type="password"
+                      />
+                    </div>
 
-	<script type="text/javascript">
-		// ADD CSS IF NOT EXIST
-		if(!$("link[href='/css/general.css']").length) {
-			document.write("<link rel='stylesheet' href='/css/general.css' type='text/css'>");
-		}
-	</script>
+                    <div class="ValidForm">
+                      <label for="vCodeReg">vCodeReg</label
+                      ><input
+                        id="vCodeReg"
+                        name="vCodeReg"
+                        type="text"
+                        value=""
+                      />
+                    </div>
+                  </div>
+                  <div class="form-btns">
+                    <input
+                      type="submit"
+                      value="S'inscrire"
+                      id="btnCreateUserProfil"
+                      name="btnCreateUserProfil"
+                      class="form-btn"
+                    />
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
 
-	<div id='findAccountNumber' class='hidden' style='display:none;'>
+        <div class="footer">
+          <div class="inner-container">
+            Copyright © 2014 - 2021, Coop&#233;rative r&#233;gionale
+            d’&#233;lectricit&#233; de St-Jean-Baptiste-de-Rouville
+          </div>
+        </div>
+      </div>
+    </div>
 
-		<div id='findAccountNumberContent' class='hidden' style='display:none;'>
-									<div class="divContentFAN" style="width:80%; max-width:800px;">
-				<div class="divContentFANTitle">
-					<span class='text_big tint_red bold'>WHERE CAN I FIND MY ACCOUNT NUMBER?</span><br><br>
-					<span class='text_regular'><img alt='' src='/images/bulletred.gif'>&nbsp;&nbsp;You can find your account number in the welcome e-mail you received</span><br>
-					<span class='text_regular'><img alt='' src='/images/bulletred.gif'>&nbsp;&nbsp;You can find your account number on your last bill</span>
-				</div>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
-				<div style="text-align:center; margin:15px; padding-top:10px;">
-				<img src="/images/bill_en.png" style="max-width: 100%;  max-height: 100vh;" alt=''>
-				</div>
-			</div>
-		</div>
-	</div>
+    <script src="/bundles/jqueryval?v=UCZCrQ4kUMe9DaFHlP54S-WPbIof6QCJ0DGfZeF9Mc41"></script>
 
+    <script src="/bundles/master?v=0y-uVyCYHTorOxVLtiEqJhNjAMs6Bw-8-pjar36TjJM1"></script>
 
-
-	<div class='section group'>
-
-		<div id='divLogin' class='col divleft'>
-
-					<form method='post' id='formLogin' name='formLogin' action='/login'>
-						<table border='0' width='100%' cellspacing='0' cellpadding='0'>
-							<tr class='table_header'>
-								<td style='padding-left:10px;'>&nbsp;</td>
-							</tr>
-							<tr>
-								<td>
-
-
-									<div id='divLoginForm' class='bgrred glowing'>
-										<table border='0' width='100%' cellspacing='0' cellpadding='4'>
-											<tr>
-												<td  width='100%' colspan='2'><div style='height: 15px; overflow:hidden;'>&nbsp;</div></td>
-											</tr>
-											<tr >
-												<td width='100%' colspan='2' style='text-align:center' class='text_summary'>Log in</td>
-											</tr>
-
-																						<tr >
-												<td width='100%' colspan='2' style='text-align:center'>&nbsp;</td>
-											</tr>
-																						<tr >
-												<td width='40%' style='padding-left:20px; text-align:right' class='text_login nobr'>Account #<br><a href='javascript:void(0);' class='findAccountNumber link_red'>Show me</a></td>
-												<td width='60%' style='padding-right:20px;'><input type='text' name='usrname' id='usrname' value='' class='tbox_login'></td>
-											</tr>
-											<tr >
-												<td width='40%' style='padding-left:20px; text-align:right' class='text_login nobr'>Password</td>
-												<td width='60%' style='padding-right:20px;'><input type='password' name='pwd' id='pwd' value='' class='tbox_login' data-caps="Caps Lock is ON" autocomplete='off'> </td>
-											</tr>
-											<tr >
-												<td width='40%' style='text-align:right'> <input type="hidden" name="_csrf_security_token" value="DAxHvBZblgpGttym2oJYDI7mpT6MWArGFuS2TLaaglQ" ></td>
-												<td width='60%' style='padding-top:10px;'>
-												<div id='iLogin'><button type="button"  class='btn btn-danger' id='btnLogin'>Login</button></div>
-
-												<div class='mobile_only' style='margin-top:25px;margin-bottom:10px;'>
-													<button type="button" onclick='location.href="/register"' class='btn btn-primary ' >Create an account</button>
-												</div>
-
-												<div style='display:block; margin-top: 20px; line-height: 20px;'></div>
-												<a href='/lostpassword' class='link_red'>Forgot password?</a>
-
-
-
-												</td>
-											</tr>
-											<tr >
-												<td width='100%' colspan='2'>&nbsp;</td>
-											</tr>
-										</table>
-									</div>
-
-
-
-
-									<div id='divwait' class='bgrred hidden' style='height:80px; text-align:center;'><img src='images/wait.gif' style='padding-top:30px;' alt=''></div>
-									</td>
-
-							</tr>
-						</table>
-					</form>
-
-		</div>
-
-
-
-		<div id='divLoginRegister' class='col divright'>
-
-
-						<table border='0' width='100%' cellspacing='0' cellpadding='0'>
-							<tr class='table_header'>
-								<td style='padding-left:10px;'>&nbsp;</td>
-							</tr>
-							<tr>
-								<td>
-
-
-									<div id='divLoginRegisterForm' class='bgrred glowing'>
-										<table border='0' width='100%' cellspacing='0' cellpadding='4'>
-											<tr>
-												<td  width='100%' colspan='2'><div style='height: 15px; overflow:hidden;'>&nbsp;</div></td>
-											</tr>
-											<tr >
-												<td width='100%' colspan='2' style='text-align:center' class='text_summary'>First time in the customer zone?</td>
-											</tr>
-											<tr >
-												<td width='100%' colspan='2'><div style='height: 10px; overflow:hidden;'>&nbsp;</div></td>
-											</tr>
-											<tr >
-												<td width='20%' style='text-align:right; padding-right:5px; padding-left:25px;'><img src='/images/arrow_right.gif' alt=''></td>
-												<td width='80%' class='text_medium'>View your account balance</td>
-											</tr>
-											<tr >
-												<td width='20%' style='text-align:right; padding-right:5px; padding-left:25px;'><img src='/images/arrow_right.gif' alt=''></td>
-												<td width='80%' class='text_medium'>Activate your TV service</td>
-											</tr>
-											<tr >
-												<td width='20%' style='text-align:right; padding-right:5px; padding-left:25px;'><img src='/images/arrow_right.gif' alt=''></td>
-												<td width='80%' class='text_medium'>Make online payment</td>
-											</tr>
-											<tr >
-												<td width='20%' style='text-align:right; padding-right:5px; padding-left:25px;'><img src='/images/arrow_right.gif' alt=''></td>
-												<td width='80%' class='text_medium'>Check your usage</td>
-											</tr>
-											<tr >
-												<td width='20%' style='text-align:right; padding-right:5px; padding-left:25px;'><img src='/images/arrow_right.gif' alt=''></td>
-												<td width='80%' class='text_medium'>Call forwarding</td>
-											</tr>
-											<tr >
-												<td width='20%' style='text-align:right; padding-right:5px; padding-left:25px;'><img src='/images/arrow_right.gif' alt=''></td>
-												<td width='80%' class='text_medium'>And much more</td>
-											</tr>
-											<tr >
-												<td width='100%' colspan='2'><div style='height: 10px; overflow:hidden;'>&nbsp;</div></td>
-											</tr>
-											<tr >
-												<td width='100%' colspan='2' style='padding-top:10px; text-align:center;'>
-													<button type="button" onclick='location.href="/register"' class='btn btn-primary ' >Create an account</button>
-
-												</td>
-											</tr>
-											<tr >
-												<td width='100%' colspan='2'>&nbsp;</td>
-											</tr>
-										</table>
-									</div>
-
-									</td>
-
-							</tr>
-						</table>
-
-
-		</div>
-
-
-
-
-
-	</div>
-
-<br><br>
-</center>
-</body>
+    <script>
+      bindHelpTooltips();
+    </script>
+  </body>
 </html>

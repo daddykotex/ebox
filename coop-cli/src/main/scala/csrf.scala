@@ -3,21 +3,23 @@ import cats.effect.Sync
 import cats.implicits._
 
 object FindCSRF {
-  private val regex = raw"""name="_csrf_security_token" value="([A-Za-z0-9_-]*)" ?>""".r.unanchored
-  def apply(html: String): Option[String] = {
+  private def regex(name: String) =
+    raw"""[\s\n\r]*name="__RequestVerificationToken"[\s\n\r]*type="hidden"[\s\n\r]*value="([A-Za-z0-9_-]*)"[\s\n\r]*\/>""".r.unanchored
+  def apply(name: String)(html: String): Option[String] = {
+    val r = regex(name)
     html match {
-      case regex(token) => Some(token)
-      case _            => None
+      case r(token) => Some(token)
+      case _        => None
     }
   }
 
-  def inStream[F[_]: Sync](payload: fs2.Stream[F, String]): F[Option[String]] = {
+  def inStream[F[_]: Sync](name: String)(payload: fs2.Stream[F, String]): F[Option[String]] = {
     payload.zipWithPrevious
       .map {
         case (Some(previous), current) => s"$previous$current"
         case (None, current)           => current
       }
-      .map(FindCSRF.apply)
+      .map(FindCSRF.apply(name))
       .collectFirst { case Some(value) => value }
       .head
       .compile

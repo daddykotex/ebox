@@ -6,21 +6,21 @@ import com.monovore.decline.effect._
 import org.http4s.client.asynchttpclient.AsyncHttpClient
 
 //Opts
-final case class CoopCredentials(accountNumber: String, password: String)
+final case class CoopCredentials(email: String, password: String)
 
 // Commands
 final case class DownloadLatest(credentials: CoopCredentials)
 
 object Main
     extends CommandIOApp(
-      name = "ebox-cli",
+      name = "coop-cli",
       header = "Simple CLI tool get info on your ebox account",
       version = "0.0.x"
     ) {
 
-  val accountNameOpts: Opts[String] = Opts.argument[String](metavar = "account-number")
+  val emailOpts: Opts[String] = Opts.argument[String](metavar = "email")
   val passwordOpts: Opts[String] = Opts.argument[String](metavar = "password")
-  val credentialsOpts: Opts[CoopCredentials] = (accountNameOpts, passwordOpts).mapN(CoopCredentials)
+  val credentialsOpts: Opts[CoopCredentials] = (emailOpts, passwordOpts).mapN(CoopCredentials)
 
   // Commands
   val getUsageCmd: Opts[DownloadLatest] =
