@@ -54,10 +54,10 @@ lazy val eboxCli = (project in file("ebox-cli"))
       "org.typelevel" %% "munit-cats-effect-2" % "0.7.0" % Test,
       "org.http4s" %% "http4s-dsl" % "0.21.8" % Test
     ),
-    javaOptions in run := {
-      val path = baseDirectory.value / "src" / "main" / "resources" / "META-INF" / "native-image"
-      Seq(s"-agentlib:native-image-agent=config-output-dir=$path")
-    },
+    // javaOptions in run := {
+    //   val path = baseDirectory.value / "src" / "main" / "resources" / "META-INF" / "native-image"
+    //   Seq(s"-agentlib:native-image-agent=config-output-dir=$path")
+    // },
     fork in run := true,
     testFrameworks += new TestFramework("munit.Framework"),
     nativeImageOptions ++= List(
