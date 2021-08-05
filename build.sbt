@@ -24,6 +24,25 @@ lazy val debugOptionsNativeImage = Seq(
   "-H:+RemoveSaturatedTypeFlows"
 )
 
+lazy val allNativeImageOptions = Def.settings(
+  nativeImageOptions ++= List(
+    "--verbose",
+    "--no-server",
+    "--no-fallback",
+    "--enable-http",
+    "--enable-https",
+    "--enable-all-security-services",
+    "--report-unsupported-elements-at-runtime",
+    "--allow-incomplete-classpath",
+    "--initialize-at-build-time=scala,org.slf4j.LoggerFactory",
+    "--initialize-at-run-time=io.netty.handler.ssl.ConscryptAlpnSslEngine,org.asynchttpclient"
+  )
+  // javaOptions in run := {
+  //   val path = baseDirectory.value / "src" / "main" / "resources" / "META-INF" / "native-image"
+  //   Seq(s"-agentlib:native-image-agent=config-output-dir=$path")
+  // },
+)
+
 addCommandAlias("buildCli", "eboxCli/nativeImage")
 lazy val eboxCli = (project in file("ebox-cli"))
   .enablePlugins(NativeImagePlugin)
@@ -40,27 +59,13 @@ lazy val eboxCli = (project in file("ebox-cli"))
       "org.typelevel" %% "munit-cats-effect-2" % "0.7.0" % Test,
       "org.http4s" %% "http4s-dsl" % "0.21.8" % Test
     ),
-    // javaOptions in run := {
-    //   val path = baseDirectory.value / "src" / "main" / "resources" / "META-INF" / "native-image"
-    //   Seq(s"-agentlib:native-image-agent=config-output-dir=$path")
-    // },
-    fork in run := true,
-    testFrameworks += new TestFramework("munit.Framework"),
-    nativeImageOptions ++= List(
-      "--verbose",
-      "--no-server",
-      "--no-fallback",
-      "--enable-http",
-      "--enable-https",
-      "--enable-all-security-services",
-      "--report-unsupported-elements-at-runtime",
-      "--allow-incomplete-classpath",
-      "--initialize-at-build-time=scala,org.slf4j.LoggerFactory",
-      "--initialize-at-run-time=io.netty.handler.ssl.ConscryptAlpnSslEngine,org.asynchttpclient"
-    )
+    run / fork := true,
+    testFrameworks += new TestFramework("munit.Framework")
   )
+  .settings(allNativeImageOptions)
 
 lazy val coopCli = (project in file("coop-cli"))
+  .enablePlugins(NativeImagePlugin)
   .settings(
     name := "coop-cli",
     Compile / mainClass := Some("Main"),
@@ -74,6 +79,7 @@ lazy val coopCli = (project in file("coop-cli"))
       "org.typelevel" %% "munit-cats-effect-2" % "0.7.0" % Test,
       "org.http4s" %% "http4s-dsl" % "0.21.8" % Test
     ),
-    fork in run := true,
+    run / fork := true,
     testFrameworks += new TestFramework("munit.Framework")
   )
+  .settings(allNativeImageOptions)
