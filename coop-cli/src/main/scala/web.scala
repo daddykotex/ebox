@@ -49,8 +49,7 @@ class Web(client: Client[IO])(implicit cs: ContextShift[IO]) {
             .raiseWhen(badStatus || !goodLocation)(
               new RuntimeException(s"Got ${resp.status} when login. Redirected to ${location.getOrElse("N/A")}")
             )
-          val logStatus = IO.delay(println(resp.headers))
-          checkResp *> logStatus *> extractCookieValueFromName(sessionCookieName, resp)
+          checkResp *> extractCookieValueFromName(sessionCookieName, resp)
         }
     }
 
