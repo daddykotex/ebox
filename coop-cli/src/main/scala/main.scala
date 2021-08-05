@@ -30,10 +30,14 @@ object Main
 
   override def main: Opts[IO[ExitCode]] =
     getUsageCmd.map { case DownloadLatest(credentials) =>
-      Blocker[IO]
-        .flatMap(blocker => AsyncHttpClient.resource[IO]())
-        .use(client => new Web(client).downloadLatest(credentials))
-        .flatMap { result => IO.delay(println(result)) }
+      (Blocker[IO], AsyncHttpClient.resource[IO]()).tupled
+        .use { case (blocker, client) =>
+          val byteStream = new Web(client).downloadLatest(credentials)
+          byteStream
+            .through(fs2.io.stdout(blocker))
+            .compile
+            .drain
+        }
         .as(ExitCode.Success)
 
     }
