@@ -70,6 +70,7 @@ lazy val coopCli = (project in file("coop-cli"))
     name := "coop-cli",
     Compile / mainClass := Some("Main"),
     addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1"),
+    addCompilerPlugin("org.typelevel" % "kind-projector" % "0.13.0" cross CrossVersion.full),
     libraryDependencies ++= Seq(
       "org.typelevel" %% "cats-core" % "2.2.0",
       "org.http4s" %% "http4s-async-http-client" % "0.21.8",

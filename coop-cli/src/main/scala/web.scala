@@ -18,9 +18,18 @@ class Web(client: Client[IO])(implicit cs: ContextShift[IO]) {
 
   private val baseUri = uri"https://www.portailcoopsjb.com"
 
-  private def bodyIfSuccess(response: Response[IO]): IO[fs2.Stream[IO, String]] = {
-    if (response.status.code <= 300) IO.pure(response.bodyText)
-    else IO.raiseError(new RuntimeException(s"Got ${response.status} when trying to read body."))
+  private def bodyIfSuccess[G[_], F[_], T](
+      response: Response[F]
+  )(extract: Response[F] => T)(implicit AE: ApplicativeError[G, Throwable]): G[T] = {
+    if (response.status.code <= 300) AE.pure(extract(response))
+    else AE.raiseError(new RuntimeException(s"Got ${response.status} when trying to read body."))
+  }
+  private def ioBodyTextIfSucceed[T](response: Response[IO]) = {
+    bodyIfSuccess[IO, IO, fs2.Stream[IO, String]](response)(_.bodyText)
+  }
+
+  private def bodyBytesIfSucceed[T](response: Response[IO]) = {
+    bodyIfSuccess[fs2.Stream[IO, *], IO, fs2.Stream[IO, Byte]](response)(_.body).flatten
   }
 
   private val csrfCookieName = "__RequestVerificationToken"
@@ -66,7 +75,7 @@ class Web(client: Client[IO])(implicit cs: ContextShift[IO]) {
       csrfRequest.map(client.run).flatMap { resource =>
         resource.use { resp =>
           val cookieToken: IO[String] = extractCookieValueFromName(csrfCookieName, resp)
-          val cookieForm: IO[String] = bodyIfSuccess(resp)
+          val cookieForm: IO[String] = ioBodyTextIfSucceed(resp)
             .flatMap(FindCSRF.inStream[IO](csrfCookieName))
             .flatMap(_.liftTo[IO](new RuntimeException("Could not find CSRF in HTML.")))
           (cookieToken, cookieForm).parTupled
@@ -76,7 +85,6 @@ class Web(client: Client[IO])(implicit cs: ContextShift[IO]) {
 
     for {
       auth <- getCSRFs
-      _ = println(auth)
       csrfTransformer = { req: Request[IO] => req.addCookie(csrfCookieName, auth.cookieVerif) }
 
       session <- loginRequest(auth.formVerif).map(csrfTransformer).flatMap(doLogin)
@@ -86,7 +94,35 @@ class Web(client: Client[IO])(implicit cs: ContextShift[IO]) {
     }
   }
 
+  def getDownloadLinks(rt: RequestTransformer): IO[List[String]] = {
+    val factureRequest = GET(baseUri / "Contenu" / "Page" / "Factures-electriques")
+    factureRequest
+      .map(rt)
+      .map(client.run)
+      .flatMap(_.use { resp =>
+        ioBodyTextIfSucceed(resp)
+          .flatMap(Factures.inStream[IO])
+      })
+      .map(_.map(_.replace("&amp;", "&")))
+  }
+
+  def download(url: String, rt: RequestTransformer): fs2.Stream[IO, Byte] = {
+    for {
+      uri <- fs2.Stream(baseUri.withPath(url))
+      req <- fs2.Stream.eval(GET(uri))
+      resp <- client.stream(rt(req))
+      body <- bodyBytesIfSucceed(resp)
+    } yield body
+  }
+
   def downloadLatest(credentials: CoopCredentials): fs2.Stream[IO, Byte] = {
-    fs2.Stream.eval(login(credentials)).flatMap { _ => fs2.Stream.emits("yes".getBytes()) }
+    for {
+      rt <- fs2.Stream.eval(login(credentials))
+      links <- fs2.Stream.eval(getDownloadLinks(rt))
+      bytes <- links.headOption match {
+        case Some(link) => download(link, rt)
+        case _          => fs2.Stream.raiseError[IO](new RuntimeException(s"Could not find a link to download."))
+      }
+    } yield bytes
   }
 }
