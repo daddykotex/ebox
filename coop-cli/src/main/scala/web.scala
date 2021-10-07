@@ -94,16 +94,48 @@ class Web(client: Client[IO])(implicit cs: ContextShift[IO]) {
     }
   }
 
-  def getDownloadLinks(rt: RequestTransformer): IO[List[String]] = {
+  // does not work on graal
+  // private val allFrenchMonths: Array[(java.time.Month, String)] =
+  //   java.time.Month
+  //     .values()
+  //     .map(m => (m, m.getDisplayName(java.time.format.TextStyle.FULL, java.util.Locale.FRANCE).toLowerCase()))
+  private val frenchMonths = List(
+    "janvier",
+    "fevrier",
+    "mars",
+    "avril",
+    "mai",
+    "juin",
+    "juillet",
+    "aout",
+    "septembre",
+    "octobre",
+    "novembre",
+    "decembre"
+  ).zipWithIndex.map { case (str, i) => (java.time.Month.of(i + 1), str) }
+  private def parseMonth(value: String): Option[java.time.Month] = {
+    frenchMonths
+      .find { case (_, frenchName) => value.toLowerCase().contains(frenchName) }
+      .map(_._1)
+  }
+  private val yearR = raw"(\d{4})".r
+  private def parseYear(value: String): Option[Int] = {
+    yearR.findFirstIn(value).map(_.toInt)
+  }
+
+  def getDownloadLinks(rt: RequestTransformer): IO[List[(String, Option[(Int, java.time.Month)])]] = {
     val factureRequest = GET(baseUri / "Contenu" / "Page" / "Factures-electriques")
     factureRequest
       .map(rt)
       .map(client.run)
       .flatMap(_.use { resp =>
-        ioBodyTextIfSucceed(resp)
-          .flatMap(Factures.inStream[IO])
+        ioBodyTextIfSucceed(resp).flatMap(Factures.inStream[IO])
       })
-      .map(_.map(_.replace("&amp;", "&")))
+      .map(_.map { case (url, innerText) =>
+        val parsed = (parseYear(innerText), parseMonth(innerText)).tupled
+        println(parsed)
+        (url.replace("&amp;", "&"), parsed)
+      })
   }
 
   def download(url: String, rt: RequestTransformer): fs2.Stream[IO, Byte] = {
@@ -115,13 +147,29 @@ class Web(client: Client[IO])(implicit cs: ContextShift[IO]) {
     } yield body
   }
 
+  def downloadMonth(year: Int, month: java.time.Month, credentials: CoopCredentials): fs2.Stream[IO, Byte] = {
+    for {
+      rt <- fs2.Stream.eval(login(credentials))
+      links <- fs2.Stream.eval(getDownloadLinks(rt))
+      availableMonths = links.collect { case (_, Some((y, m))) => s"$year-${month.getValue()}" }.mkString(", ")
+      bytes <- links
+        .collectFirst {
+          case (link, Some((y, m))) if month.equals(m) && year == y => download(link, rt)
+        }
+        .getOrElse(
+          fs2.Stream
+            .raiseError[IO](new RuntimeException(s"Could not find a link to download. Available: $availableMonths"))
+        )
+    } yield bytes
+  }
+
   def downloadLatest(credentials: CoopCredentials): fs2.Stream[IO, Byte] = {
     for {
       rt <- fs2.Stream.eval(login(credentials))
       links <- fs2.Stream.eval(getDownloadLinks(rt))
       bytes <- links.headOption match {
-        case Some(link) => download(link, rt)
-        case _          => fs2.Stream.raiseError[IO](new RuntimeException(s"Could not find a link to download."))
+        case Some((link, _)) => download(link, rt)
+        case _               => fs2.Stream.raiseError[IO](new RuntimeException(s"Could not find a link to download."))
       }
     } yield bytes
   }

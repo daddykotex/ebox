@@ -4,12 +4,18 @@ import cats.implicits._
 
 object Factures {
   private val regex =
-    raw"""href="(\/DocumentMembre\/Download[A-Za-z0-9_\-\/\?;&=\.]*)"""".r.unanchored
-  def apply(html: String): List[String] = {
-    regex.findAllMatchIn(html).toList.map(_.group(1))
+    raw"""<a\s+href="(\/DocumentMembre\/Download[A-Za-z0-9_\-\/\?;&=\.]*)"\s*(?:[\w\d\s"_=]*)\s*>\s+([\w<>\/\s\]\[\+]*)\s+<\/a>""".r.unanchored
+
+  private val accentHelper = "\\p{M}".r
+
+  private val compiledRegex = java.util.regex.Pattern.compile("\\p{M}")
+  def apply(html: String): List[(String, String)] = {
+    val normalized =
+      accentHelper.pattern.matcher(java.text.Normalizer.normalize(html, java.text.Normalizer.Form.NFD)).replaceAll("")
+    regex.findAllMatchIn(normalized).toList.map(oneMatch => (oneMatch.group(1), oneMatch.group(2)))
   }
 
-  def inStream[F[_]: Sync](payload: fs2.Stream[F, String]): F[List[String]] = {
+  def inStream[F[_]: Sync](payload: fs2.Stream[F, String]): F[List[(String, String)]] = {
     payload.zipWithPrevious
       .map {
         case (Some(previous), current) => s"$previous$current"
