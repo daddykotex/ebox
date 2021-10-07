@@ -1,3 +1,4 @@
+Global / excludeLintKeys ++= Set(nativeImageVersion, nativeImageJvmIndex, nativeImageJvm)
 lazy val root = (project in file("."))
   .settings(
     inThisBuild(
@@ -23,24 +24,27 @@ lazy val debugOptionsNativeImage = Seq(
   "-H:-UseServiceLoaderFeature",
   "-H:+RemoveSaturatedTypeFlows"
 )
-
 lazy val allNativeImageOptions = Def.settings(
+  nativeImageVersion := "21.1.0",
+  nativeImageJvmIndex := "jabba",
+  nativeImageJvm := "graalvm",
   nativeImageOptions ++= List(
     "--verbose",
     "--no-server",
     "--no-fallback",
     "--enable-http",
     "--enable-https",
+    "-H:IncludeLocales=fr,en",
     "--enable-all-security-services",
     "--report-unsupported-elements-at-runtime",
     "--allow-incomplete-classpath",
     "--initialize-at-build-time=scala,org.slf4j.LoggerFactory",
     "--initialize-at-run-time=io.netty.handler.ssl.ConscryptAlpnSslEngine,org.asynchttpclient"
   )
-  // javaOptions in run := {
+  // run / javaOptions := {
   //   val path = baseDirectory.value / "src" / "main" / "resources" / "META-INF" / "native-image"
   //   Seq(s"-agentlib:native-image-agent=config-output-dir=$path")
-  // },
+  // }
 )
 
 addCommandAlias("buildCli", "eboxCli/nativeImage")

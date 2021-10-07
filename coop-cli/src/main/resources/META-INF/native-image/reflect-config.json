@@ -4,7 +4,26 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"byte[]"
+},
+{
   "name":"com.sun.crypto.provider.AESCipher$General",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.ARCFOURCipher",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.ChaCha20Cipher$ChaCha20Poly1305",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.DESCipher",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"com.sun.crypto.provider.DESedeCipher",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
@@ -156,11 +175,17 @@
   "methods":[{"name":"channelRead","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.lang.Object"] }]
 },
 {
+  "name":"io.netty.handler.codec.http.HttpClientCodec"
+},
+{
   "name":"io.netty.handler.codec.http.HttpContentDecoder",
   "methods":[
     {"name":"channelInactive","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, 
     {"name":"channelReadComplete","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }
   ]
+},
+{
+  "name":"io.netty.handler.codec.http.HttpContentDecompressor"
 },
 {
   "name":"io.netty.handler.ssl.SslHandler",
@@ -223,7 +248,8 @@
   "name":"java.lang.String[]"
 },
 {
-  "name":"java.lang.invoke.VarHandle"
+  "name":"java.lang.invoke.VarHandle",
+  "methods":[{"name":"releaseFence","parameterTypes":[] }]
 },
 {
   "name":"java.lang.management.ManagementFactory",
@@ -285,6 +311,9 @@
   "methods":[{"name":"getUnsafe","parameterTypes":[] }]
 },
 {
+  "name":"org.asynchttpclient.netty.channel.ChannelManager$1"
+},
+{
   "name":"org.asynchttpclient.netty.handler.AsyncHttpClientHandler",
   "methods":[
     {"name":"channelActive","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, 
@@ -293,6 +322,18 @@
     {"name":"channelReadComplete","parameterTypes":["io.netty.channel.ChannelHandlerContext"] }, 
     {"name":"exceptionCaught","parameterTypes":["io.netty.channel.ChannelHandlerContext","java.lang.Throwable"] }
   ]
+},
+{
+  "name":"org.asynchttpclient.netty.handler.HttpHandler"
+},
+{
+  "name":"org.asynchttpclient.netty.handler.StreamedResponsePublisher"
+},
+{
+  "name":"org.asynchttpclient.netty.request.body.NettyReactiveStreamsBody$NettySubscriber"
+},
+{
+  "name":"scala.Tuple2[]"
 },
 {
   "name":"scala.util.Either[]"
@@ -374,6 +415,10 @@
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
+  "name":"sun.security.rsa.PSSParameters",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
   "name":"sun.security.rsa.RSAKeyFactory$Legacy",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
@@ -387,6 +432,10 @@
 },
 {
   "name":"sun.security.rsa.RSASignature$SHA256withRSA",
+  "methods":[{"name":"<init>","parameterTypes":[] }]
+},
+{
+  "name":"sun.security.rsa.RSASignature$SHA384withRSA",
   "methods":[{"name":"<init>","parameterTypes":[] }]
 },
 {
